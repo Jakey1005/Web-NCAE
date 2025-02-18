@@ -2,7 +2,6 @@
 Web NCAE
 
 #Apache
-Apache
 
 #Installing Apache
 sudo apt update
