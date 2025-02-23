@@ -81,3 +81,35 @@ try {
     die();
 }
 ```
+### Setting up SSL
+```
+certbot --apache --server https://ca.ncaecybergames.org/acme/acme/directory
+sudo nano /etc/apache2/sites-available/default-ssl.conf
+<VirtualHost *:443>
+        ServerName www.jake.test.org
+        DocumentRoot /var/www/html
+
+        SSLEngine on
+
+        SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+        SSLCertificateKeyFile   /etc/ssl/private/ssl-cert-snakeoil.key
+
+        <FilesMatch "\.(?:cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory /var/www/html>
+                AllowOverride ALL
+        </Directory>
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+sudo a2enmod ssl
+sudo a2ensite default-ssl.conf
+systemctl reload apache2
+```
+```
+<VirtualHost *:80>
+        ServerName www.jake.test.org
+        Redirect permanent / https://www.jake.test.org/
+</VirtualHost>
+```
