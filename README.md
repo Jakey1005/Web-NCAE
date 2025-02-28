@@ -154,3 +154,6 @@ server {
 ```
 sudo systemctl restart nginx
 ```
+```
+*/5 * * * * certbot renew --quiet && systemctl reload nginx
+```
