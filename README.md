@@ -113,3 +113,44 @@ systemctl reload apache2
         Redirect permanent / https://www.jake.test.org/
 </VirtualHost>
 ```
+```
+sudo apt update
+sudo apt install certbot
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx --server https://acme-staging-v02.api.letsencrypt.org/directory
+nano /etc/nginx/sites-available/default
+```
+```
+server {
+    if ($host = 3.83.34.41.nip.io) {
+        return 301 https://$host$request_uri;
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+        server_name _;
+        location / {
+                try_files $uri $uri/ =404;
+        }
+        server_name 3.83.34.41.nip.io;
+        return 301 https://$host$request_uri;
+}
+server {
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+server {
+    if ($host = 3.83.34.41.nip.io) {
+        return 301 https://$host$request_uri;
+        listen 80 ;
+        listen [::]:80 ;
+    server_name 3.83.34.41.nip.io;
+}
+```
+```
+sudo systemctl restart nginx
+```
